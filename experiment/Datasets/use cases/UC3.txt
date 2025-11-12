@@ -1,0 +1,161 @@
+----------------ECHO: An Approach to Enhance Use Case Quality Exploiting Large Language Models----Control Group's improved version--------
+1------------------------------
+ID: CPM:US1.001
+
+Title: View Vitals Measurements
+
+Actors: Doctor can view the patient's recorded vitals measurements to monitor or change the treatment. Caregivers, nurse, and social-health workers can view the patient's recorded vitals measurements to monitor the Patient’s health conditions and inform or alert the Patient’s Doctor. Patient can view his (or her) vitals measurement to verify his (or her) health conditions.
+
+Preconditions: At least one set of vitals measurements is stored for the given patient. Vitals can be measured more than once per day.
+
+Postconditions:
+	- The user has successfully viewed the patient's vitals measurements.
+Main scenario:
+	1. The user selects the "View Vitals Measurements" tab for the given patient.
+	2. The system searches for the measurements and displays them in a table format, including the date and time of each measurement and the corresponding vital sign values.
+	3. The user views the results.
+
+Alternative flow no. 1:
+	1. If at step 3 of the main scenario, the actor selects the sub-option 'Add a measurement,' include the use case CPM:US1.002– Add a measurement.
+
+Alternative Flow no. 2:
+	1. If at step 3 of the main scenario, the actor selects the ‘display trend,’ include the use case CPM:US1.003– Display the graph of the measurements.
+
+Exceptions:
+	- If the system cannot find any measurements for the given patient, an error message is displayed to the user.
+	- If there is an error in displaying the measurements, an error message is displayed to the user.
+	
+2---------------------------------------------
+ID: CPM:US1.002 
+
+Title: Add a measurement
+
+Actors: Doctor can request the new measurement for treatment purpose. Nurse, caregiver, and Social-health operator can take the measurement for a given Patient and report to the Patient’s doctor. Patient can add the new measurement.
+
+Preconditions:
+	- The user is logged in.
+	- The user has permission to add a new measurement.
+
+Postconditions:
+	- The system saves the new measurement to the measurement table.
+	- The user can list the new measurement for the given vitals.
+	
+Main scenario:
+	1. The user clicks "New measurement".
+	2. The system displays a form with a list of measuring instruments.
+	3. The user selects the desired measuring instrument from the list.
+	4. The system searches and displays the vital parameters associated with the selected measuring instrument.
+	5. The user fills in the measurement fields relating to the vital parameters associated with the selected instrument (for example, for blood pressure, systolic and diastolic expressed in mmHg, for weight, the weight values expressed in kilograms, etc.).
+	6. The user presses the “Save” button.
+	7. The system validates the input data.
+	8. The system saves the new measurement to the list of measurements for the selected vital parameter.
+	9. The system displays the message "The measurement has been saved correctly."
+	10. The system refreshes the list of measurements to include the new measurement.
+
+Alternative flow no. 01:
+	3. At step 3 of the main scenario, the user decides not to add a new measurement.
+	4. The user clicks the "Cancel" button.
+	5. The system returns to the home page.
+
+Exceptions:
+	8a. The system displays the error message “The data is invalid.”
+	10a. The system displays the error message “A system error occurred.”
+	
+3-------------------------------------
+ID: CPM:US1.003
+
+Title: Display Measurement Graph for a Vital Parameter
+
+Actors: Doctor, nurse, social health operator, caregiver, patient
+
+Preconditions:
+	- The user is logged in and has the permissions to view the measurement graph.
+	- There is at least a measurement for the given vital parameter for the given Patient.
+	
+Postconditions:
+	- The system displays the graph of the measurements for the given vital parameter.
+	
+Main Scenario:
+	1. The user selects "Display measurement graph for vital" for the given vital parameter.
+	2. The system searches for the measurements of the given vital parameter.
+	3. The system displays a graph with the vital parameter measurements on the y-axis and the date-time on the x-axis.
+	4. The user views the graph.
+	
+Alternative Flow no. 1:
+	- At step 4, the user closes the Form.
+	- The system returns to the previous screen.
+	
+Error Handling:
+	- If there is an error in generating the graph, the system displays an error message to the user and returns to the previous screen.
+	- If there are no measurements available for the selected vital parameter, the system displays an error message to the user.
+	
+4----------------------------------------------
+ID: CPM:US1.004
+
+Title: Add an automatic measurement
+
+Actors: Patient, Sensor Device, Mobile App
+
+Preconditions:
+	- The patient is logged in and has the permissions to access the automatic measurement feature.
+	- The patient has a certified sensor device.
+	- The Mobile app is connected to Internet.
+	
+Postconditions:
+	- The measurement data are saved for the given patient.
+	- The Mobile App displays and error message if the system was unable to insert the new data.
+	
+Main scenario:
+	1. The user selects a vital sign to measure using an instrument from the kit.
+	2. The Sensor Device sends the raw data to the Mobile App.
+	3. The Mobile App requests the system to save the measurement data (i.e. Vital sign type, date and time of measurement and values of the measurement)
+	4. The system validates the measurement data and saves them.
+	5. The system sends the Mobile App an envelope data of the operation, stating that the data were successful saved.
+	6. The Mobile App displays a message to the user to inform him (or her) that the data has been saved.
+	
+Alternative flow no. 01:
+	4a. The user closes the app.
+	5a. The system does not save any data.
+	
+Exception flow no. 01:
+	5a. The system is unable to save the measurement, and sends an envelope indicating the error to the Mobile App.
+	6a. The Mobile App displays an error message to the user stating that the measurement was not saved.
+	
+Exception flow no. 2:
+	2a. The device is not able to send data.
+	3a. The Mobile App displays an error message to the user stating that an error occurred with the device.
+	
+Exception flow no. 3:
+	3a. The Mobile App is unable to connect to the system.
+	4a. The Mobile App displays an error message to the user stating that an error occurred.
+	
+5----------------------------------------------
+ID: CPM:US2.001
+
+Title: List all alert parameters
+
+Actors: Doctor
+
+Preconditions:
+	- The user must be logged in.
+	- The user must have permission to list alert parameters.
+	- The user has selected the "Thresholds" option.
+	
+Postconditions:
+	- The user views the list of alerts for the given vital parameter.
+	
+Basic Flow:
+	1. The user selects the "List all vitals" button.
+	2. The system searches and displays the list of vitals.
+	3. The user selects the desired vital sign.
+	4. The system searches and displays the list of alerts related to the selected vital parameter. The list is sorted by "Name" and contains the threshold value, the alert message, and the severity level.
+	5. The user can browse the results.
+	
+Alternative Flow 1:
+	5a. The user clicks the “Close” button.
+	6a. The system closes the form and returns to the previous screen.
+	
+Error Handling:
+	4a. The system displays the error message “A system error occurred.”
+	4b. The system displays the error message “No alerts are available for the selected vital sign.”
+	

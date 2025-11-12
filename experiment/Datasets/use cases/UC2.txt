@@ -1,0 +1,285 @@
+1---------- From: A case study for generating test cases from use cases------7 path
+Use case#l:Search link by description
+Description：A use case searches a set of links by their description and shows the results. 
+MainSequence
+	1 The visitor asks the system for searching links by description. 
+	2 The system asks for the description. 
+	3 The visitor introduces the description. 
+	4 The system searches for links which match up with the description introduced by the visitor. 
+	5 The system shows the found results. 
+AlternativeSteps
+	3.1 At any time, the visitor may cancel the search, then the use case ends. 
+	4.1 If the visitor introduces an empty description, then the system searches for all the stored links and step 5 is repeated. 
+ErrorSteps
+	4.2 If the system finds any error performing the search, then an error message is shown and this use case ends. 
+	4.3 If the result is empty, then the system shows a message and this use case ends.
+
+2----------- From: Automation of test case generation from textual use cases----5 paths
+Use case#2:Seller submits an offer.
+Scope : MP .
+Precondition:Seller has logged in.
+SuD:MIS.
+Primary actor:Seller.
+Main scenario.
+	l Seller submits item description.
+	2 System validates the item.
+	3 System asks Seller to input billing information.
+	4 Seller enters price and enters contact and billing information.
+	5 System validates history information.
+	6 System validates the whole offer with the Trade Commission.
+	7 Trade Commission gives response.
+	8 System sends authorization number to Seller
+Extensions.
+	2a Item is not valid.
+		2a1 Use case is aborted.
+	5a History information is not valid.
+		5a1 Use case is aborted.
+	7a Trade Commission rejects the offer.
+		7a1 Use case is aborted.
+Variations.
+	2b Price assessment is available.
+		2b1 System provides assessment for price.
+		
+3-------------From: An Approach of Test Case Generation with Software Requirement Ontology--------------
+Use Case lD:UC001
+Use Case Name: Borrow Item
+Pre-Condition: Checking members of the library
+Post-Condition: Borrow items successfully
+Priority: High
+Flow of Event:
+	1.The system shows GUI for a list of items to borrow 
+	2.Member select items to borrow 
+	3.Member confirm borrow items [A1]
+	4.The system records the borrowed items 
+	5.The system displays a list of borrowed items
+Alternative Flow:
+	[A1]If click "Cancel" button, the system will not records [E1]
+Exception Flow:
+	[E1]The system shows the warning "Confirm cancellation?"
+	
+4----------------From: Transforming Software Requirements into Test Cases via Model Transformation-------2 paths---
+Use Case Name: Withdraw Transaction
+Primary Actor: Customer Secondary 
+Actor: Database (DB)  
+Precondition: The Customer has successfully logged into the ATM. 
+Postcondition: The Customer has successfully withdrawn money and received a receipt. 
+Trigger: The Customer opts to Withdraw Transaction.  
+Main Scenario:  
+	1. DB presents the types of accounts. 
+	2. Customer selects the type of account. 
+	3. DB requests the withdrawal amount. 
+	4. Customer inputs the amount. 
+	5. Customer collects the withdrawn money. 
+	6. DB generates and dispenses a receipt.  
+	7. Customer collects the receipt.  
+	8. DB shows a closing message and ejects the Customer’s ATM card.  
+	9. Customer collects the card. 
+	10. DB shows a welcome message.  
+Extensions: (Failure mode)  
+	5a. DB informs the Customer of insufficient funds. 
+	5b. DB provides the current account balance. 
+	5c. DB exits the option.
+	
+5----------------From: Generating Abstract Test Cases from User Requirements using MDSE and NLP--------
+Use Case ID: PMS-02-Login-Employee
+Goal: Employee logs into the system using their credentials
+Actor: Employee
+Precondition:
+	1. The Employee has an account
+	2. The Employee has the correct credentials
+	3. The Employee is on the login page
+Description:
+	1. The Employee enters the username in the login page
+	2. The Employee enters the password in the login page
+	3. The Employee clicks on the sign_in button in the login page
+Postcondition:
+	1.PMS system authenticates username and password
+	2.The Employee is redirected to the Employee homepage
+	3.The Employee can use PMS system functionalities
+	
+6--------------From: SYNTest: Prototype of Syntax Test Case Generation Tool----------------
+Use Case Name: MODULE RECORDING BORROWING INFORMATION
+Main Flow：
+	S1. The system displays the screen for inputting borrowing information. 
+	S2. Librarians input the borrowing information including Member ID, Member Name, Book ID, Book Type and Borrow date. 
+	S3. Librarians record the borrowing information input to the system. 
+	S4. The system displays the confirmation of recording status to Librarians.
+7-----------------------------------
+Use Case Name: MODULE ADDING PRODUCT DELIVERY
+Main Flow：
+	S1. The system displays the screen for adding product delivery. 
+	S2. Staff input the delivery information including Product ID, Customer Name, Product Name, Product Type, EMS No and Postcode. 
+	S3. Staff record the delivery information. 
+	S4. The system displays the confirmation of adding status to the staff.
+	
+8----------------From: An Approach of Generating Test Requirements for Agile Software Development-----------
+8---Report Emergency Use case----
+Use Case Name: Report Emergency 
+Actors: FieldOfficer, Dispatcher  
+Goal: The Field officer reports the emergency to the Dispatcher by activating the function on the terminal. 
+Pre-Condition(s): The FieldOfficer is logged into FRIEND.  
+Main Flow:
+	M1. FieldOfficer activates the 'Report Emergency' function of FRIEND terminal 
+	M2. FRIEND responds by presenting a form to the FieldOfficer. 
+	M3. FieldOfficer clicks on open form button and describes possible responses to the emergency situation [S1][S2] 
+	M4. FieldOfficer clicks on submit button 
+	M5. The Dispatcher reviews the submitted information [S3][S4][S5] 
+	M6. Dispatcher submits the final report and then FRIEND displays the acknowledgment and response to the FieldOfficer. 
+	M7. Unable to make a connection [A1]  
+Sub Flow:
+	S1. FieldOfficer select the emergency level, type, location, and brief description of the situation. 
+	S2. The FieldOfficer also describes possible responses to the emergency situation 
+	S3. Creates an Incident in the database 
+	S4. Dispatcher selects a response
+	S5. Dispatcher submits the response to the FieldOfficer 
+Alternate Flow: 
+	A1. Extend use case Connection Down [E1] 
+Exceptional Flow: 
+	E1. Connection lost between the FieldOfficer and Dispatcher. Then, FRIEND responds the FieldOfficer and Dispatcher to try again 
+Post Condition(s): The FieldOfficer has received an acknowledgment and the selected response from the Dispatcher.
+
+9---Open Incident Use case----
+Use Case Name: Open Incident 
+Actors: Dispatcher  
+Goal: The Dispatcher manages the incident on the basis of emergency reported by the FieldOfficer 
+Pre-Condition(s): Dispatcher receives the information from the field officer.  
+Main Flow:  
+	M1. Dispatcher select a response sent by field officer [E1] 
+	M2. If Information is present, Dispatcher Include Create Incident UC [A1] 
+	M3. On the basis of priority incident (low or high), Dispatcher allocate the resources to the incident [A2][A3] 
+	M4. Dispatcher Include Manage Incident UC [S1][S2][S3] 
+	M5. Dispatcher close the incident Include Close Incident UC  
+Sub Flows:  
+	S1. Dispatcher receives reports and allocates resources. 
+	S2. Dispatcher coordinates the resources. 
+	S3. Dispatcher document the incident activity (about the allocation of resources and the action taken)  
+Alternate Flows:  
+	A1. If didn’t receive the information by the field officer, or in the database, go back to the entry condition, remain in the idle mode. 
+	A2. For the low priority incident, the dispatcher allocates the resources of its own and the resource allocated is then committed to the specified incident. 
+	A3. For the highest priority incident, the dispatcher notifies the chief for the allocation of resource to the specified incident.  
+Exceptional Flows:  
+	E1. Unable to select the response (restart the database or try again) 
+Post Condition(s): Dispatcher opens an Incident.
+
+10---Allocate Resources Use case----
+Use Case Name: Allocate Resources 
+Actors: Dispatcher  
+Goal: The Dispatcher allocates the resources on the basis of Incident 
+Pre-Condition(s): The Dispatcher opens an Incident.  
+Main Flow (Mid)  
+	M1. Dispatcher selects an Emergency Incident 
+	M2. Dispatcher allocates the resources to the incident. 
+	M3. Dispatcher sends the resources information to the FieldOfficer 
+Alternate Flows: 
+Exceptional Flows: 
+Post Condition(s):  
+	Po1. Resources are assigned to the Incident. 
+	Po2. Resources receive notice about their new assignment. 
+	Po3. FieldOfficer in charge of the Incident receives notice about the new Resources.
+	
+11------------From: Automatic Generation of Acceptance Test Cases From Use Case Specifications: An NLP-Based Approach---6 paths----
+---------------And: Automatic generation of system test cases from use case specifications-------------------
+-----Domain: BodySense
+
+Use Case ldentify Occupancy Status
+
+Precondition
+	The system has been initialized.
+	
+Basic Flow
+	1. The SeatSensor SENDS capacitance TO the system.
+	2. INCLUDE USE CASE Self Diagnosis.
+	3. The system VALIDATES THAT the occupant class for airbag control is valid and the occupant class for seat belt reminder is valid.
+	4. The system SENDS the occupant class for airbag control TO AirbagControllnit.
+	5. The system SENDS the occupant class for seat belt reminder TO SeatBeltControlUnit.
+	Postcondition: The occupant class for airbag control has been sent to AirbagControlUnit. The occupant class for seat belt reminder has been sent to SeatBeltControlUnit.
+	
+Bounded Alternative Flow
+RFS 2-3
+	1. IF voltage error is detected THEN
+	2. The system resets classification filters.
+	4. RESUME STEP 1.
+	5. ENDIF
+	Postcondition: Classification filters have been reset.
+	
+Specific Altenative Flow
+RFS 3
+	1. IF the occupant class for airbag control is not valid and the occupant class for seat belt reminder is not valid THEN
+	2. The system SENDS the previous occupant class for airbag control TO AirbagControlUnit
+	3. The system SENDS the previous occupant class for seat belt reminder TO SeatBeltControlUnit
+	4. RESUME STEP 1.
+	5. ENDIF
+	Postcondition: The previous occupant classes for airbag control and seat belt reminder has been sent to AirbagControlUnit and to SeatBeltControlUnit respectively.
+	
+Specific Altenative Flow
+RFS 3
+	1. IF the occupant class for seat belt reminder is not valid THEN
+	2. The system SENDS the occupant class for airbag control TO AirbagControlUnit.
+	2. The system SENDS the previous occupant class for seat belt reminder TO SeatBeltControlUnit.
+	4. RESUME STEP 1.
+	5. ENDIF
+	Postcondition: The occupant class for airbag control has been sent to AirbagControlUnit and the previous occupant class for seat belt reminder has been sent to SeatBeltControlUnit.
+	
+12----------------------------------------
+Use Case Self Diagnosis
+
+Precondition
+	The system has been initialized.
+	
+Basic Flow
+	1. The system sets temperature errors to not detected.
+	2. The system sets memory errors to not detected.
+	3. The system VALIDATES THAT the NVM is accessible.
+	4. The system REQUESTS the temperature FROM the SeatSensor.
+	5. The system VALIDATES THAT the temperature is above -10 degrees.
+	6. The system VALIDATES THAT the temperature is below 50 degrees.
+	7. The system sets self diagnosis as completed.
+	Postcondition: Error conditions have been examined.
+	
+Specific Alternative Flow
+RFS 3
+	1. The System sets MemoryError to detected.
+	2. RESUME STEP 4
+	Postcondition: The system has detected a MemoryError.
+	
+Specific Alternative Flow
+RFS 5
+	1. The System sets TemperatureLowError to detected.
+	2. RESUME STEP 7
+	Postcondition: The system has detected a TemperatureLowError.
+	
+Specific Alternative Flow
+RFS 6
+	1. The System sets TemperatureHighError to detected.
+	2. RESUME STEP 7
+	Postcondition: The system has detected a TemperatureHighError.
+	
+13---------------------------------------
+Use Case Classify Occupancy Status
+
+Precondition
+	The system has been initialized.
+	
+Basic Flow
+	1. The system sets the occupant class for airbag control to Init.
+	2. The system sets the occupant class for seatbelt reminder to Init.
+	3. IF the system VALIDATES THAT the capacitance is above 600.
+	4. The system sets the occupant class for airbag control to Occupied.
+	5. The system sets the occupant class for seatbelt reminder to Occupied.
+	6. An adult has been detected on the seat.
+	
+Specific Alterative Flow
+RFS 3
+	1. IF capacitance is above 200 THEN
+	2. The system sets the occupant class for airbag control to Empty.
+	3. The system sets the occupant class for seatbelt reminder to Occupied.
+	4. EXIT
+	Postcondition: A child has been detected on the seat.
+	
+Specific Alterative Flow
+RFS 3
+	1. IF capacitance is below 200 THEN
+	2. The system sets the occupant class for airbag control to Empty.
+	3. The system sets the occupant class for seatbelt reminder to Empty.
+	4. EXIT
+	Postcondition: The seat has been recognized as being empty.

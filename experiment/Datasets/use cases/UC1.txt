@@ -1,0 +1,195 @@
+1-------------------------------------
+TCT: US0.001 – Access the "Settings" section
+Description: The actor accesses the settings configuration interface in the 'Configuration' section of the FID-TCT application. Specifically, in this section, the timing for receiving information from the device is configured, as well as the number to contact in case of SOS button press, and the location tracking of the user.
+Other actors: Configurator.
+Pre-conditions
+Main Scenario
+1.	The actor accesses the 'Configuration' section.
+2.	The system displays the 'settings' sections.
+3.	The actor accesses the 'settings' section.
+4.	The system displays a screen with the information to be configured.
+5.	The actor navigates the screen.
+Alternative flows
+Alternative flow no 01
+1.	If the actor at step 5 of the main flow fills in the blank fields, the use case TCT: US0.002 - Configure the parameters of the "Settings" section is initiated.
+
+2---------------------------------------
+TCT: US0.002– Configure the parameters of the "Settings" section.
+Description: The actor accesses the 'Configuration' interface of the Remote Control module. Specifically, in this section are configured the timing for receiving information from the device, the number to be contacted following the pressing of the SOS button, and the 'Localization of the assisted person', which is detected by performing a localization. It is possible to get the latitude and longitude of the home. The parameter is useful for monitoring the exit of the assisted person from a safety perimeter, defined by a radius 'R', or in cases of necessity from their own home. 
+Primary actors: Configurator.
+Pre-conditions
+Main Scenario
+1.	The actor accesses the 'Remote Control' section and clicks on "Configuration".
+2.	The system displays a screen with the information to be configured and the location already defined during the association between smartwatch and assisted person.
+3.	The actor fills in the fields and saves.
+4.	The system saves the configuration and notifies the smartwatch.
+Exceptions
+Exception no. 01
+1.	At step 3, the actor saves without filling out the mandatory fields.
+2.	The system displays an error message "Fill in the mandatory fields".
+3-------------------------------------
+TCT: US2.001– Access the 'Threshold List' section
+Description: The actor accesses the threshold creation interface of the Telecontrol module. In this section, minimum and/or maximum thresholds for the generation of alerts are set.
+Primary actors: MMG, Relative.
+Pre-conditions
+Main Scenario
+1.	The actor selects the sub-option 'Thresholds'.
+2.	The system displays a form for parameter selection.
+3.	The actor selects a parameter from the list.
+4.	The system searches for the thresholds related to the given parameter.
+5.	The system shows the threshold list defined for the given parameter.
+Alternative flows
+Alternative flow no. 01
+1.	If in step 3 of the main flow, the actor uses the 'create' feature, the use case TCT: US1.002 - Create threshold is initiated.
+Alternative flow no. 02
+1.	If at step 5 of the main flow the actor uses the functionality of displaying the details of a created threshold, the use case TCT: US1.003- Display the details of a created threshold is started.
+Alternative flow no. 03
+1.	If at step 5 of the main flow the actor uses the 'deletion' function of a created threshold, use case TCT: US1.005 - Delete a threshold is initiated.
+4-----------------------
+TCT: US1.002 – Insert threshold
+Description: The actor insert thresholds associated with a parameter.
+Primary actors: MMG, Relative.
+Pre-conditions
+The main scenario of the use case TCT: US2.001 has been executed.
+Main Scenario
+1.	The actor clicks on "add threshold".
+2.	The system shows an interface with fields to be filled out.
+3.	The actor fills out the fields and clicks on "save".
+4.	The system saves the set threshold and displays it in the list.
+Alternative flows
+Alternative flow no. 01
+1.	At step 3 of the main flow, the actor clicks on "cancel".
+2.	The system closes the threshold creation interface and displays the list of thresholds associated with the selected parameter unchanged.
+Exceptions
+Exception no. 01
+1.	The actor in step 3 of the main flow does not fill out either the 'Minimum Threshold' field or the 'Maximum Threshold' field and uses the save functionality.
+2.	The system displays an error message "Please enter at least one threshold".
+5----------------------
+TCT: US1.003– Display threshold details.
+Description: The actor displays the details of a threshold previously created and associated with a parameter.
+Primary actors: MMG, Relative.
+Pre-conditions
+There is at least a threshold in the database. The main scenario of the us case TCT: US2.001 has been executed.
+Main Scenario
+1.	The actor clicks on "view detail" for a given threshold.
+2.	The system searches for the threshold details.
+3.	The system displays the threshold details in a page with editable fields.
+Alternative flows
+Alternative flow no. 01
+1.	If in step 3 of the main flow, the actor uses the 'change' feature, the use case TCT: US1.004 - Update threshold is initiated.
+
+Alternative flow no. 02
+If in step 3 of the main flow, the actor uses the 'deletion' feature, the use case TCT: US1.005 – Delete a threshold is initiated.
+6---------------------
+TCT: US1.004 – Update threshold
+Description: The actor modifies a threshold previously defined for a parameter.
+Primary actors: MMG, Relative.
+Pre-conditions
+At least a threshold exists in the database. The main scenario of the use case TCT: US1.003 has been executed.
+Main Scenario
+1.	The actor clicks the “Change” button.
+2.	The system displays the editable fields for the threshold.
+3.	The actor modifies a field and clicks on save.
+4.	The system saves the changes and displays the updated list of thresholds of the selected parameter.
+Alternative flows
+Alternative flow no. 01
+1.	The actor at step 3 of the main flow clicks on "cancel".
+2.	The system returns to the previous screen.
+Exception
+Exception no. 01
+1.	At step 3 of the main flow, the actor does not fill in either the 'Minimum Threshold' field or the 'Maximum Threshold' field.
+2.	The system displays an error message "Enter at least one threshold".
+7---------------------
+TCT: US1.005– Delete a threshold
+Description: The actor removes a defined threshold for a parameter.
+Primary actors: MMG, Relative.
+Pre-condition
+At least a threshold exists in the database. The main scenario of the use case TCT: US1.003 has been executed.
+
+Main scenario
+1.	The actor clicks on "delete" for the given threshold.
+2.	The system asks to confirm the operation
+3.	The actor clicks the “confirm” button
+4.	The system deletes the threshold.
+5.	The system displays the message “Threshold successfully deleted”
+6.	The system returns to the previous screen.
+Alternative flows
+Alternative flow no. 01
+1.	The actor at step 3 of the main flow the actor clicks on "cancel".
+2.	The system returns to the previous screen.
+8--------------------------
+TCT: US2.001 – Measurements taken.
+Description: The actor accesses the interface where the information showing the progress of the monitored activities is present. The values are reported corresponding to the date and time of the last update. It is also possible to view the information in graphic form.
+Primary actors: Relative, MMG.
+Pre-conditions
+At least a measurement exists in the database
+Main Scenario
+1.	The actor accesses the 'Measurements' area.
+2.	The system displays a page where it is possible to view the measurement related to the latest update for each parameter.
+3.	The actor navigates the interface.
+Alternative flows
+Alternative flow no. 01
+1.	If the actor at step 3 uses the chart viewing feature, the use case TCT: US2.002 - View detection charts is initiated.
+9-------------------------------
+TCT: US2.002 – Display measurement graphs
+Description: The actor views information related to parameter measurements in graphic form. The graphs can be weekly, monthly and/or quarterly depending on the parameter you want to display.
+Primary actors: MMG, Relative.
+Pre-conditions
+At least a measurement exists in the database
+Main Scenario
+1.	The actor accesses the 'Measurements' section.
+2.	The system displays an interface where it is possible to view for each parameter the measurements related to the last update.
+3.	The actor uses the graph viewing functionality related to one of the detected parameters.
+4.	The system opens a popup with the graphs available for the selected parameter.
+5.	The actor navigates the interface.
+10---------------------
+TCT: US2.003 – View Alert
+Description: The actor views all received alerts.
+Primary actors: MMG, Relative.
+Pre-conditions
+An alert has been generated for an anomalous measurement.
+Main Scenario
+1.	The actor uses the alert display feature present in the system interface.
+2.	The system displays the list of all registered alerts.
+3.	The actor navigates the list.
+Alternative flows
+Alternative flow no. 01
+1.	The actor at step 3 selects a specific alert.
+2.	The system shows the detection screen highlighting the detection to which the alert refers.
+Alternative flow no. 02
+1.	At step 3 of the main flow, the actor deactivates an alert in the list to indicate its resolution. 
+11--------------------
+TCT: US3.001 – Record the exit of the patient from the security area.
+Description: The device detects the exit from the safety area by the patient and counts the number of times it occurs. In order to detect the location of the patient, the device identifies the home of the individual and a radius (in meters) that allows for identifying a safe area. Once this area is crossed, the patient's exit is identified; this information is sent to the system, which records it and allows for viewing.
+Primary actors: Device.
+Pre-conditions
+The patient is wearing the device and the association between the smartwatch and the patient has been successfully made to allow the exchange of information with the platform and the display of information in the medical record.
+Main Scenario
+1.	The device detects the location of the patient and calculates the difference between this and a position identified as 'location' (detected at the time of the association between the smartwatch and the patient); if it exceeds a configurable distance, the device records the patient's departure.
+2.	The information is sent to the system, which records it and allows it to be viewed in the patient's medical file. The system sends a notification to inform that the patient has left the safety perimeter and to detect their real-time location.
+12------------------------------
+TCT: US3.002 – Patient’s steps count
+Description: The device detects the number of steps taken by the patient and sends this information to the system that records it and allows its display.
+Primary actors: Device
+Pre-conditions: 
+The patient is wearing the device and the association between the smartwatch and the patient has been correctly established to allow the exchange of information with the platform and the display of information in the medical record.
+Main scenario:
+1.	The device records the number of steps taken by the patient.
+2.	The information is sent every X minutes (reception timing) which records it and allows it to be displayed in the patient's medical record.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
