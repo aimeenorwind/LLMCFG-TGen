@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Case Evaluation Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style type="text/tailwindcss">
+        @layer utilities {
+            details summary::-webkit-details-marker { display: none; }
+            .no-scrollbar::-webkit-scrollbar { display: none; }
+        }
+        table { table-layout: fixed; width: 100%; }
+        td { word-wrap: break-word; overflow-wrap: break-word; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-900 p-4 md:p-8">
+    <div class="container mx-auto max-w-[1600px]">
+        <header class="mb-10 text-center">
+            <h1 class="text-4xl font-extrabold text-slate-800 mb-2">Test Case Comparison Workbench</h1>
+            <p class="text-slate-500 italic">Evaluation Tool: Method A (Input 2), Method B (Input 3), Method C (Input 4)</p>
+        </header>
+
+        <section class="bg-white rounded-2xl shadow-xl p-6 mb-8 border border-slate-200">
+            <div class="grid lg:grid-cols-4 gap-6">
+                <div class="flex flex-col">
+                    <label class="font-bold text-slate-700 mb-2">1. Use Case Description</label>
+                    <textarea id="in-uc" class="border rounded-xl p-3 h-64 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Paste Use Case here..."></textarea>
+                </div>
+                <div class="flex flex-col">
+                    <label class="font-bold text-emerald-600 mb-2">2. Test Suite 1 (Method A)</label>
+                    <textarea id="in-m1" class="border border-emerald-100 rounded-xl p-3 h-64 text-xs font-mono focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="Paste JSON Array for Method A..."></textarea>
+                </div>
+                <div class="flex flex-col">
+                    <label class="font-bold text-amber-600 mb-2">3. Test Suite 2 (Method B)</label>
+                    <textarea id="in-m2" class="border border-amber-100 rounded-xl p-3 h-64 text-xs font-mono focus:ring-2 focus:ring-amber-500 outline-none" placeholder="Paste JSON Array for Method B..."></textarea>
+                </div>
+                <div class="flex flex-col">
+                    <label class="font-bold text-violet-600 mb-2">4. Test Suite 3 (Method C)</label>
+                    <textarea id="in-m3" class="border border-violet-100 rounded-xl p-3 h-64 text-xs font-mono focus:ring-2 focus:ring-violet-500 outline-none" placeholder="Paste JSON Array for Method C..."></textarea>
+                </div>
+            </div>
+            <div class="mt-8 text-center">
+                <button onclick="renderEvaluation()" class="bg-slate-800 hover:bg-black text-white px-12 py-4 rounded-full font-bold shadow-lg transition-all transform hover:scale-105">
+                    <i class="fa fa-play mr-2"></i> Render Results (A/B/C)
+                </button>
+            </div>
+        </section>
+
+        <section id="outputArea" class="hidden">
+            <div class="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-8">
+                <h2 class="text-xl font-bold text-blue-800 mb-2 flex items-center">
+                    <i class="fa fa-file-text-o mr-2"></i> Reference: Use Case
+                </h2>
+                <div id="out-uc" class="whitespace-pre-line text-sm text-blue-900 leading-relaxed bg-white/50 p-4 rounded-lg"></div>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8 items-start">
+                <div>
+                    <div class="bg-emerald-500 text-white p-4 rounded-t-2xl font-black text-center text-lg shadow-md uppercase tracking-widest">Method A</div>
+                    <div id="out-a" class="bg-white border-x border-b border-slate-200 rounded-b-2xl p-4 space-y-4 shadow-sm"></div>
+                </div>
+                <div>
+                    <div class="bg-amber-500 text-white p-4 rounded-t-2xl font-black text-center text-lg shadow-md uppercase tracking-widest">Method B</div>
+                    <div id="out-b" class="bg-white border-x border-b border-slate-200 rounded-b-2xl p-4 space-y-4 shadow-sm"></div>
+                </div>
+                <div>
+                    <div class="bg-violet-500 text-white p-4 rounded-t-2xl font-black text-center text-lg shadow-md uppercase tracking-widest">Method C</div>
+                    <div id="out-c" class="bg-white border-x border-b border-slate-200 rounded-b-2xl p-4 space-y-4 shadow-sm"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function safeParseJSON(str) {
+            if (!str) return null;
+            try {
+                return JSON.parse(str);
+            } catch (e) {
+                try {
+                    // 兼容 Python 单引号及关键字
+                    const fixed = str
+                        .replace(/'([^']*)'(?=\s*[:\],}])/g, '"$1"') 
+                        .replace(/(?<=[:\[,{]\s*)'([^']*)'/g, '"$1"')
+                        .replace(/: None/g, ': null')
+                        .replace(/: True/g, ': true')
+                        .replace(/: False/g, ': false');
+                    return JSON.parse(fixed);
+                } catch (e2) {
+                    throw new Error("Invalid format. Ensure it's a valid Array [ {...} ].");
+                }
+            }
+        }
+
+        function renderEvaluation() {
+            const ucText = document.getElementById('in-uc').value.trim();
+            try {
+                const dataA = safeParseJSON(document.getElementById('in-m1').value.trim());
+                const dataB = safeParseJSON(document.getElementById('in-m2').value.trim());
+                const dataC = safeParseJSON(document.getElementById('in-m3').value.trim());
+
+                if (!dataA || !dataB || !dataC) {
+                    alert("Please provide data for all 3 Test Suites.");
+                    return;
+                }
+
+                // 按照 2->A, 3->B, 4->C 的顺序固定展示
+                document.getElementById('out-uc').innerText = ucText || "No Use Case provided.";
+                renderColumn('out-a', dataA);
+                renderColumn('out-b', dataB);
+                renderColumn('out-c', dataC);
+
+                document.getElementById('outputArea').classList.remove('hidden');
+                document.getElementById('outputArea').scrollIntoView({ behavior: 'smooth' });
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        function renderColumn(elementId, testSuite) {
+            const container = document.getElementById(elementId);
+            container.innerHTML = '';
+
+            testSuite.forEach((tc, idx) => {
+                const details = document.createElement('details');
+                details.className = "group border border-slate-200 rounded-xl bg-slate-50/50 overflow-hidden transition-all duration-200 open:bg-white open:shadow-md";
+                
+                // 标题格式化：仅首字母大写
+                const rawTitle = tc.ID ? `[${tc.ID}] ${tc.DESCRIPTION}` : (tc.DESCRIPTION || `Test Case ${idx + 1}`);
+                const formattedTitle = rawTitle.charAt(0).toUpperCase() + rawTitle.slice(1);
+
+                const steps = tc.TEST || tc.test || [];
+                const precondition = tc.PRECONDITION || tc.precondition || 'N/A';
+                const actors = Array.isArray(tc.ACTORS || tc.actors) ? (tc.ACTORS || tc.actors).join(', ') : (tc.ACTORS || tc.actors || 'N/A');
+
+                details.innerHTML = `
+                    <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white list-none select-none">
+                        <span class="font-bold text-xs text-slate-700 pr-4 leading-tight">${formattedTitle}</span>
+                        <div class="text-slate-400 group-open:rotate-180 transition-transform">
+                            <i class="fa fa-chevron-down"></i>
+                        </div>
+                    </summary>
+                    <div class="p-4 border-t border-slate-100 space-y-4">
+                        <div class="grid grid-cols-1 gap-3 text-[11px] leading-relaxed">
+                            <div><b class="text-slate-400 uppercase tracking-widest text-[9px]">Precondition</b><p class="mt-1 text-slate-700">${precondition}</p></div>
+                            <div><b class="text-slate-400 uppercase tracking-widest text-[9px]">Actors</b><p class="mt-1 text-slate-700">${actors}</p></div>
+                        </div>
+                        
+                        <table class="w-full text-[11px] border-collapse bg-white border border-slate-100 shadow-sm">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 uppercase text-[9px]">
+                                    <th class="p-2 border border-slate-100 text-center w-8">#</th>
+                                    <th class="p-2 border border-slate-100 text-left">Input Action</th>
+                                    <th class="p-2 border border-slate-100 text-left">Expected Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${steps.map(s => `
+                                    <tr>
+                                        <td class="p-2 border border-slate-100 text-center font-mono text-slate-400">${s.STEP || s.step || ''}</td>
+                                        <td class="p-2 border border-slate-100 text-slate-700">${s.INPUT || s.input || '-'}</td>
+                                        <td class="p-2 border border-slate-100 text-blue-700 font-medium">${s.RESULT || s.result || ''}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                container.appendChild(details);
+            });
+        }
+    </script>
+</body>
+</html>
