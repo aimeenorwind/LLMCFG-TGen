@@ -1,0 +1,306 @@
+1-------------------
+UC3.1 – Authenticate Users 
+Actors: 
+     User (Patient, Healthcare Provider, Administrator)
+
+Preconditions:
+     The User account exists and is not locked.
+
+Postconditions:
+     Success:
+	The User is authenticated. A Session is established. The User is redirected to the system home page.
+     Failure:
+	The login attempt is recorded. The account or IP may be temporarily locked after repeated failures.
+
+Main Success Scenario:
+	1. The User enters MID and Password, and submits the login request.
+	2. The System validates the credentials.
+	3. The System checks whether the account is locked.
+	4. If the credentials are valid and the account is not locked[A1].
+	5. The System redirects the User to a role-based personalized home page.
+
+Alternative Flows:
+     [A1] Invalid Credentials
+	The System displays an error message: “Invalid MID or Password.”
+	The System increments the failed login attempt counter.
+	If the number of failed attempts in the current session is less than 3:
+	The User is allowed to retry login (return to Step 1 of Main Flow).	Otherwise: The System triggers the lock mechanism[A2].
+
+     [A2] Lock Mechanism Triggered
+	The System temporarily blocks login attempts from the same account or IP address for 15 minutes.
+
+2------------------------------------
+UC3.2 – Authenticate Users Password Reset
+Actors: 
+     User (Patient, Healthcare Provider, Administrator)
+
+Preconditions:
+     The User account exists and is not locked.
+
+Postconditions:
+     Success:
+	The User's password is updated
+     Failure:
+	The password is not changed.
+
+Main Success Scenario:
+     1. A user enters their MID and selects“Forgot Password”in login page.
+     2. The System checks whether a Security Question is configured.
+     3. If security Question Exists, the System displays the security question[A1].
+     4. The User provides an answer.
+     5. The System checks the answer is correct[A2].
+     6. The System allows the User to set a new password.
+     7. The System updates the new password and sends a notification email.
+     8. The User is redirected to the login page.
+
+Alternative Flows:
+     [A1] No Security Question Configured
+	The System prompts the User to enter the initial random password assigned at account creation.
+	If valid: The System allows the User to reset the password.
+	If invalid: 	
+	The User may retry up to 3 times.
+	After 3 failed attempts, the System denies the request and redirects to the login page.
+
+     [A2] If the answer is incorrect:
+     	The System displays an error message.
+     	The User may retry up to 3 times.
+     	After 3 failed attempts, the User is redirected to the login page.
+3---------------------------------
+Identify Risk of Chronic Disease
+Actors: 
+     LHCP (Licensed Healthcare Provider)
+
+Preconditions:
+     The LHCP has authenticated himself or herself in the iTrust Medical Records system.
+     The system has defined risk factors for Diabetes (Type 1 and Type 2) and Heart Disease.
+
+Postconditions:
+     Success: The LHCP is presented with a warning message detailing specific risk factors if the patient exhibits three or more; or a normal status message if fewer risk factors are found.
+     Failure: The analysis is not performed, and the LHCP is prompted that no analysis can occur due to unmet preconditions or missing data.
+
+Main Success Scenario:
+     1. The LHCP navigates to the Personal Health Records page.
+     2. The LHCP chooses a patient and a chronic disease (Diabetes or Heart Disease).
+     3. The System checks whether the chosen patient satisfies the preconditions of the chosen chronic disease (e.g., age appropriateness)[A1].
+     4. The System analyzes the data in the database according to the risk factors for the disease.
+     5. The System identifies that the patient exhibits three or more risk factors[A2].
+     6. The System provides the LHCP with a warning message.
+     7. The message displays the specific risk factors that the patient exhibits.
+
+Alternative Flows:
+     [A1] Preconditions Not Met
+	1. The LHCP chooses to examine a patient for which the preconditions do not apply (e.g., an adult shouldn't be tested for child diabetes).
+	2. The System prompts the LHCP that no analysis can occur.
+	3. The System does not proceed to analyze risk factors.
+
+     [A2] Low Risk Identified (Fewer than 3 Risk Factors)
+	1. The System determines that the patient exhibits fewer than three risk factors.
+	2. The System displays a status message indicating low or moderate risk (e.g., "No significant risk factors identified").
+
+4-----------------------------
+UC19 – View Prescription Report
+Actors: Patient, Personal Health Representative (PHR), LHCP
+
+Preconditions: The iTrust user has authenticated himself or herself in the iTrust Medical Records system.
+
+Postconditions: Report displayed OR access denied with notification sent.
+
+Main Success Scenario:
+	1. User selects View Prescription Report.
+	2. System determines the User Role as a patient[A1, A2].
+	3. The system displays a list of the patient's prescriptions, and sorted by Start Date (newest first), showing: Medication, Dates, and Prescribing Doctor.
+	4. The prescription report is titled with the patient name. 
+	5. The prescription list includes medication, date prescribed, start date, end date for each prescription, and the name of the doctor who prescribed the medication.
+
+Alternative Flows:
+	[A1] System determines the User Role as a personal health representative.
+	System displays a list of their patients.
+	User selects a patient.
+	Resume at Step 3.
+
+[A2] System determines the User Role as LHCP.
+	System displays all the patients list. 
+	The user (LHCP) selects a patient from the list of requested reports[E1].
+	Resume at Step 3.
+
+Exception:
+	[E1]If the LHCP is not one of the patient's DLHCP or the UAP associated with one of their DLHCP, system denies access, sends a notification to the patient/PHR, and Use Case ends.
+
+5-------------------------------
+Schedule an appointment with a patient
+
+Actors: LHCP
+Preconditions: The LHCP has authenticated himself or herself in the iTrust Medical Records system
+Main Success Scenario:
+	1. The LHCP chooses to schedule an appointment with a patient. 
+	2. The LHCP enters the patient MID [E1]
+	3. The LHCP selects the type of appointment from a pull-down menu of the existing appointment types
+	3. The LHCP enters the appointment date and start time (only a date/time equal or after the current date/time is allowed)[E2]
+	4. The LHCP enters comment (optional) up to 1000 characters such as reason for the appointment. 
+
+
+Alternative Flows:
+	[E1] The user inputs the MID of a patient who is deceased and is prompted to try again.
+   	[E2] The date for the appointment is in the past, an error message is displayed and the appointment is not edited.
+
+6-----------------------------------
+A patient can request to schedule an appointment with an LHCP
+Preconditions: The patient has authenticated himself or herself in the iTrust Medical Records system
+Main Success Scenario:
+	1. The patient selects an LHCP from his or her provider list.
+	2. The patient selects the type of appointment from a pull-down menu of the existing appointment types, enter the appointment date and start time (only a date/time equal or after the current date/time is allowed)[E1]
+	3. If the requested appointment time does not conflict with any existing appointment for the LHCP, the request is saved[E2].
+
+Alternative Flows:
+	[E1] The date for the appointment is in the past, an error message is displayed and the appointment is not edited.
+	[E2] If the requested appointment time does conflict with an existing appointments, the patient is presented with a list of the three next non-overlapping available appointment times within 7 days of the requested date. 
+	[E3]The patient selects one of these appointments and the request is saved.
+
+7------------------------------
+LHCP sends a message to patient
+
+Actors: LHCP
+Preconditions: The LHCP has authenticated himself or herself in the iTrust Medical Records system
+
+Main Success Scenario:
+	1. An LHCP chooses to send a message to a patient/representative (no multiple recipients allowed in a single message)
+	2. The LHCP enters and confirms the patient/representative's MID [E1, E2].
+	3. The LHCP types the subject (up to 100 characters) and the text of a message (up to 1000 characters), and clicks the send button[E3]. 
+	4. A row displaying the message subject, the name of the recipient, and the timestamp becomes visible in the LHCP's message outbox.
+	5. A bolded row displaying the message subject, the name of the sender, and the timestamp becomes visible in the patient/representative's message inbox.
+	6. A simulated email is sent to the patient/representative indicating that they have received a new message from an LHCP.
+	7. After the message is sent, the LHCP is directed to to his/her message outbox.
+
+Alternative Flows:
+	[E1] The HCP types an invalid medical identification number and is prompted to try again.
+	[E2] The patient chosen is not the desired patient. The HCP does not confirm the selection and is prompted to try again.
+	[E3] If the text exceeds the character limit, the tool prevents sending and displays an error message.
+   	
+8-----------------------------------
+Patient or personal representative reply to message
+
+Actors: LHCP
+Preconditions: The patient has authenticated himself or herself in the iTrust Medical Records system
+
+Main Success Scenario:
+	1. The Patient or Personal Representative views their message inbox.
+	2. The Patient/Representative opens the specific message to which they wish to reply.
+	3. The message subject, the name of the sender, the name of the the recipient, timestamp, and the message text shall be displayed in a new page.
+	4. The Patient/Representative clicks the Reply link located above the message text.
+	5. The Patient/Representative enters the text of the response message (up to 1000 characters) and clicks the Send button.
+	6. A row displaying the message subject (preceded by "Re:"), the name of the recipient, and the timestamp becomes visible in the Patient/Representative's message outbox.
+	7. A bolded row displaying the message subject (preceded by "Re:"), the name of the sender, and the timestamp becomes visible in the LHCP's message inbox.
+	8. A fake email is sent to the LHCP alerting the LHCP that a new message reply has arrived.
+
+9----------------------------------
+Find LHCPs for prescription renewal
+Preconditions:
+The iTrust user (patient) has been authenticated in the iTrust Medical Records system (UC3).
+
+ Main Flow:
+	1. The patient chooses the "My Expired Prescription Reports" option.
+	2. The system presents a list of the patient's expired prescriptions, sorted by start date (with the most recent dates ranked closer to the top)[E1].
+	3. The expired prescription report list is titled with the patient name. 
+	4. The expired prescription list includes medication, date prescribed (i.e., the day of the office visit), start date, end date for each prescription, and the name of the LHCP who prescribed the medication (where the name of the LHCP is linked to contact information for that LHCP). 
+	5. The patient can select to view the contact information of a specific LHCP shown in the expired prescription list.
+	6. The patient clicks on the name of the LHCP for an expired prescription
+	7. The system displays all the contact information for that LHCP, including: First Name Last Name, LHCP Type, Street Address 1, Street Address 2, City, State, Zip Code, Phone, and Contact Email[E2].
+
+Alternative Flows:
+	[E1] If there are no expired prescriptions, an empty expired prescription list is presented.
+	[E2] If any type of contact information is missing or the whole contact information for the LHCP is not available in the database, the corresponding missing types of information are simply shown as blank.
+
+10-----------------------------------------
+Sending Patient Referrals
+Preconditions:
+The iTrust HCP has been authenticated in the iTrust Medical Records system.
+
+Main Flow:
+	1. The sending HCP visits the referral feature on a patient's office visit page
+	2. The sending HCP select a receiving HCP by either entering the HCP's MID and confirming the selection [E1], or by searching for the HCP by name. 
+	3. The sending HCP is also presented with a text box to include notes about the referral. 
+	4. The sending HCP then chooses a priority from 1-3 (1 is most important, 3 is least important) for the referral.
+	5. The HCP send the referral [E2].
+	6. Upon sending a referral, the patient, sending HCP, and receiving HCP receive a message summarizing the newly created referral information (sending HCP name & specialty, receiving HCP name & specialty, patient name, referral notes, and referral creation timestamp); additionally, the sending and receiving HCP messages include the referral priority.
+
+Alternative Flows:
+    [E1] The receiving HCP chosen is not the desired HCP. The sending HCP does not confirm the selection and is prompted to try again.
+    [E2] The patient, receiving HCP, referral notes, and/or referral priority are invalid, and the HCP is prompted to enter this information again.
+
+11-----------------------------------------------------
+Views received referrals
+Preconditions:
+The iTrust HCP has been authenticated in the iTrust Medical Records system.
+
+Main Flow:
+	1. An HCP chooses to view received referrals. 
+	2. The receiving HCP is presented with a list of referrals sorted by priority (from most important to least important)[E1]. 
+	3. The receiving HCP then selects a referral to view details and is presented with the name and specialty of the sending HCP, the patient's name, the referral notes, the referral priority, the office visit date with a link to the office visit, and the time the referral was created.
+
+Alternative Flows:
+    [E1]  If there are no referrals, an empty referrals list is presented.
+12-------------------------------
+Report Telemedicine Monitoring Details
+Preconditions:
+The iTrust LHCP or UAP have been authenticated in the iTrust Medical Records system.
+
+Main Flow:
+	1. An LHCP or UAP opens the telemedicine monitoring list of patients for which he or she monitor remotely.
+	2. An LHCP or UAP can add a patient to the monitoring list by typing in the patient's MID or name[E1].
+	3. The system presents the name of the patient and the actor confirm the add[E2].
+	4. For each patient from the monitoring list, the LHCP can choose to edit which types of remote monitoring information (blood pressure, glucose levels, height, weight, and pedometer readings) should be submitted by the patient.
+	5. By default, all types of information are selected for monitoring.
+Alternative Flows:
+    [E1]  An LHCP or UAP can delete a patient from the monitoring list by the patient's MID or name.
+            An LHCP or UAP confirm the delete, the patient has been removed from the monitoring list.
+    [E2]  An LHCP or UAP cancel the addition, the system returns to the monitoring list.
+
+
+
+
+----------------------------------------------------------------------------------------
+14-------------------------------------2条
+Monitor Adverse Event
+Preconditions:
+The Public Health Agent has been authenticated in the iTrust Medical Records system.
+
+Main Flow:
+	1. A Public Health Agent is presented with a listing of prescription drug-related adverse events for the current time period that do not have a status of "removed", sorted by NDC.
+	2. The Public Health Agent can select a specific report to view its details.
+	3. Upon reading the report, the Agent can choose to send a "fake email" message to the adverse event reporter to request more information. 
+	4. If the Agent chooses to remove an adverse event report (e.g., based on communication with the reporter or because the report appears bogus).
+	5. The system changes the report status to "removed" and sends a notification to both the adverse event reporter and the LHCP involved in the report (prescribing the drug or administering the immunization).
+
+15--------------------------2 paths
+Delete Drug Interaction
+Preconditions:
+The iTrust user (admin) has been authenticated in the iTrust Medical Records system
+
+Main Flow:
+	1. The administrator selects one drug and is presented with a listing of all drug interactions currently associated with that drug. 
+	2. The administrator can select a particular pair of drugs and delete the interaction between the two drugs[E1].
+Alternative Flows:
+	[E1] The administrator can cancel the deletion in confirmation window.
+
+
+
+
+ 
+
+
+ . 
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+

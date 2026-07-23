@@ -1,0 +1,141 @@
+-----------------------From：2003 - pnnl.pdf---------------两种方式效果都不好--
+1--------
+Start Diagnostics Use Case
+Brief Description
+	This use case provides the actor the means to start diagnostic processing. The actor in this case is the administrator user.
+Flow of Events
+	The use case begins just prior to when the user launches the application.
+Main Flow – Start Diagnostics
+	1. The user launches the tool by double-clicking the icon associated with the tool or typing the application’s name.
+	2. The tool momentarily displays a splash screen identifying the tool, identifying developing and sponsoring organizations as appropriate, and listing copyright information.
+	3. The tool displays the main window of the tool.
+	4. The user starts the diagnostic processing by selecting a menu item named “Start Diagnostics” from a drop down menu named “Status”.
+	5. If the user has the appropriate privilege (i.e., the user is the administrator user) the tool requests a confirmatory response from the user to start the diagnostic processing.
+	6. If the user confirms the desire to start diagnostic processing, the tool starts the processing and displays an animated indication that diagnostic processing is active[A1,A3].
+	7. If the user responds negatively to the confirmation, the tool does not start the diagnostic processing but the user remains authenticated.
+	8. If the user does not have the appropriate privilege, the tool does not start the diagnostic processing.
+	
+Alternative Flow
+	A1. If the user selects a menu item named “Logout” from the drop down menu named “File”.
+	A2. The tool returns the current user’s privileges to those of the general user.
+	A3. If a period of 15 minutes elapses whereby the user does not secure the tool, the users privileges will automatically revert to those of a general user.
+
+2--------
+Stop Diagnostics Use Case
+Brief Description
+	This use case provides the actor the means to stop diagnostic processing. The actor in this case is the administrator user.
+Flow of Events
+	The use case begins just prior to when the user launches the application and the diagnostic processing has started.
+Main Flow – Stopping Diagnostic Processing
+	1. The user can select the “Stop Diagnostics” menu item from the main menu entitled “Status”.    
+	2. The tool requests confirmation to stop diagnostic processing.
+	3. If the user responds positively to the confirmation, the tool stops diagnostic processing and indicates the stopped condition[A1]. Otherwise the software performs no function but the user remains authenticated[A2]. 
+	
+	
+Alternative Flow
+	A1. If the user selects the “Exit” menu item from the main menu entitled “File” and the diagnostic processing is not active, the tool exits.
+	A2. If the user selects “Exit” and the diagnostic processing is active, the tool stops the processing and exits. 
+
+
+3-------------------
+Browse Current Diagnostics Use Case
+Brief Description
+	This use case provides the actor the means to view current diagnostic results
+Flow of Events
+	The use case begins with the tool executing and displaying a list of buildings under diagnosis on the main (initial) window.
+Postconditions
+	The diagnostic processing will not cease or be negatively impacted during the activities of this use case.
+
+Basic Flow – Browse Current Diagnostics
+	1. The tool displays the main (initial) window, listing buildings under diagnosis.
+	2. The user selects a building of interest.
+	3. The tool displays the subsystems window, tiled on top the main (initial) window.
+	4. The user selects a subsystem of interest.
+	5. The tool displays the condition window, tiled on top the subsystems window.
+	6. The user selects a diagnostic of interest.
+	7. The tool displays the diagnostic information window for that diagnostic.
+Alternative Flow
+	1. The user may click the “Back” button to dismiss the current window and re-establish the previous window as the current window.
+	2. The user may click a button labeled “Print” on the diagnostic information window to print an image of the window.
+
+4-------------------
+Browse Historical Diagnostics Use Case
+Brief Description
+	This use case provides the actor the means to view historical diagnostic results. 
+Flow of Events
+	The use case begins with the tool displaying the diagnostic information window, itself displaying a description of a diagnostic of interest.
+Preconditions
+	The diagnostic processing need not be active for this use case. A diagnostic information window must be displayed for this use case to begin.
+Postconditions
+	The diagnostic processing will not cease or be negatively impacted during the activities of this use case.
+Basic Flow – Browse Historical Diagnostics
+	1. The user clicks the “History” button.
+	2. The tool displays the diagnostic history window depicting the historical results of the selected condition of interest over the default viewing period in the form of a color map[A3]. 
+	3. The window provides a scroll bar allowing the user to navigate through the entire range of available historical data, extending beyond the default viewing period.
+	4. The user slides the scroll bar backward or forward to view previous results up to the current time[A1].
+	5. The user may close the diagnostic history window by clicking the “Close” button.
+	6. The tool dismisses the diagnostic history window and the diagnostic information window and makes the condition window the current window.
+
+Alternative Flows
+Changing the Viewing Period
+	A1. The user selects a new viewing period from a list of periods provided by the tool.
+	A2. The tool redisplays the historically data over the new viewing period.
+Displaying Historical Diagnostic Information
+	A3. The user double-clicks a cell in the history window.
+	A4. The tool retrieves the data and displays the diagnostic information window associated with the selected cell.
+
+
+
+5--------------------
+Configure Diagnostics Use Case
+Brief Description
+	This use case provides the actor the means to configure the diagnostic tool. This includes defining the buildings containing systems to be diagnosed, defining the systems themselves, specifying equipment setpoints, selecting diagnostic sensitivity, and modifying fixed data.
+Flow of Events
+	The diagnostic tool is executing prior to the processing of this use case and only the main window of the tool is displayed.
+Preconditions
+	The main window of the tool must be the only window active for the tool prior to execution of this use case.
+Postconditions
+	Any changes made by the administrator user to the diagnostic tool will take affect immediately if requested by the user.
+
+Basic Flow – Configure Diagnostics
+	1. When presented with the main window, the user may select the “Configure Diagnostics” menu item from the menu entitled “File”.
+	2. If the user has the appropriate privilege, the tool displays the configuration window[A1].
+	3. The user may click the “Recall” button to read previously saved changes from a disk file or database.
+	4. The tool populates the window with the data from the disk file.
+	5. The user makes the desired changes to the configuration and can click the button labeled “Save” to save the changes[A2].
+	6. If the user clicks the button labeled “Save”, the tool will request confirmation to save the changes.
+	7. If the user confirms, the tool will request a name for the disk file in which to save the modified data to permanent storage.
+	8. The user will enter a name for the file.
+	9. If the user enters a name for the file, the tool will save the changes. 
+	10. If the tool completes the save operation, the tool will ask the user if the changes are to be relayed to the diagnostic processing for immediate use.
+	11. If the user confirms the changes are to be relayed to the diagnostic processing, the tool relays the changes if the processing is currently active. 
+	
+Alternative Flows
+	A1. If the user is not authenticated as the administrator, the tool displays a "Permission Denied" message and aborts the operation.
+	A2. Otherwise, the user can click the button labeled “Close”.
+	A3. If the user clicks the button labeled “Close”, the tool will request confirmation for the close and the potential loss of any changes.
+	A4. If the user confirms, the tool will dismiss the configuration window, ignoring any changes and returns the user to the main window.
+
+
+6--------------------------
+Authenticate User
+Brief Description
+	This use case establishes the privileges of the user for certain functions of the tool.
+Flow of Events
+	This use case begins when another use case requires its instantiation.
+
+Basic Flow
+	1. The tool displays a window for entry of authenticating information, i.e., user name and password, to validate and establish the privileges of the user.
+	2. The user enters their user name and password[A2].
+	3. The tool attempts to authenticate the user and indicates whether authentication has succeeded or not.
+	4. If authentication is successful, system authenticates successfully, establishes user privileges, and dismisses authentication window[A1].
+
+Alternative Flows
+	A1. If authentication is unsuccessful, the user is returned to the authentication window to reenter the information[E1][A2].
+	A2. The user may cancel the authentication process at any time and return to the previous window.
+Exception
+	E1. The tool permits three attempts at authentication before dismissing the authentication window and returning the user to the previous window.
+
+
+
+
